@@ -1,28 +1,27 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	name: "The Tree of Light",
+	id: "com.AlexMagician.TreeOfLight",
+	author: "AlexMagician",
+	pointsName: "Light",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (1), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "Aether",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+let changelog = `<h1>Changelog</h1><br>
+	<h2><bdi style=\"color:#df0f0f\">You're playing PRE-RELEASE version. Things are not balanced, and you might HARD RESET quite often.</bdi><br>v0.1</h2><br>
+	Implemented the Aether layer.<br>Endgame at 12 Aether upgrades.`
 
-let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
+let winText = `Welp, that's it for now. You've gathered enough Light to ascend.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -34,7 +33,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return hasUpgrade("a", 11)
 }
 
 // Calculate points/sec!
@@ -42,7 +41,10 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(1)
+	let gain = new Decimal(0.1)
+	if(hasUpgrade("a", 12)) gain = gain.times(upgradeEffect("a", 12))
+	if(hasUpgrade("a", 13)) gain = gain.times(upgradeEffect("a", 13))
+	if(getBuyableAmount("a", 11).gt(0)) gain = gain.times(buyableEffect("a", 11))
 	return gain
 }
 
@@ -56,7 +58,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return hasUpgrade("a", 34)
 }
 
 
